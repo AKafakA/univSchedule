@@ -11,7 +11,7 @@ from argparse import Namespace
 
 from api.serve_utils import set_ulimit, serve_http
 
-TIMEOUT_KEEP_ALIVE = 5  # seconds.
+TIMEOUT_KEEP_ALIVE = 10  # seconds.
 app = FastAPI()
 asyncClient = AsyncClient()
 

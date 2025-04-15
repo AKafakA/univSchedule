@@ -28,7 +28,7 @@ async def get_response(model_name: str, prompt: str, options: Dict, start_time: 
     ):
         time_stamp = time.time() * 1000 - start_time
         time_stamps.append(time_stamp)
-        generated_tokens.append(part['message']['content'])
+        generated_tokens.append(part['response'])
     response["generated_response"] = " ".join(generated_tokens)
     response["ttft"] = time_stamps[0]
     if len(time_stamps) > 1:
@@ -51,7 +51,7 @@ async def generate_benchmark(request: Request) -> Response:
     assert asyncClient is not None
     request_dict = await request.json()
     start_time = time.time() * 1000
-    model_name = request_dict["model_name"]
+    model_name = request_dict["model"]
     prompt = request_dict["prompt"]
     options = request_dict.get("options", {})
     response = await get_response(model_name, prompt, options, start_time)

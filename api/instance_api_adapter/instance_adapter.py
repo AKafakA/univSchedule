@@ -62,7 +62,7 @@ class Instance(ABC):
         self.instance_id = instance_id
         self._ip_address = ip_address
         self._port = port
-        self._backend_url = f"http://{ip_address}:{port}/generate"
+        self._backend_url = f"http://{ip_address}:{port}/generate_benchmark"
         if predict_model_root_path:
             predict_model_path = predict_model_root_path + "/" + str(instance_type) + "/"
             self._predict_model = LightningModule.load_from_checkpoint(predict_model_path)

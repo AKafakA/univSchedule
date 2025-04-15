@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import signal
+import sys
 from typing import Optional, Dict, Any, List
 
 import psutil
@@ -75,3 +76,20 @@ async def post_serving_request(url: str, data: Dict, client_timeout: ClientTimeo
                 return await response.json()
             else:
                 raise Exception(f"Failed to post request to {url}: {response.status}")
+
+
+def set_ulimit(target_soft_limit=65535):
+    if sys.platform.startswith('win'):
+        return
+
+    import resource
+    resource_type = resource.RLIMIT_NOFILE
+    current_soft, current_hard = resource.getrlimit(resource_type)
+
+    if current_soft < target_soft_limit:
+        try:
+            resource.setrlimit(resource_type,
+                               (target_soft_limit, current_hard))
+        except ValueError as e:
+            print(f"Failed to set soft limit to {target_soft_limit}: {e}")
+            return

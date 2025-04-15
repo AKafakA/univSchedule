@@ -4,7 +4,7 @@ import ssl
 import time
 from typing import Any, Dict
 
-from ollama import generate, AsyncClient
+from ollama import AsyncClient
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, Response, StreamingResponse
 from argparse import Namespace
@@ -88,7 +88,7 @@ async def run_server(args: Namespace,
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", type=str, default=None)
-    parser.add_argument("--port", type=int, default=8200)
+    parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--backend_port", type=int, default=11434)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--ssl-keyfile", type=str, default=None)

@@ -22,6 +22,8 @@ from vllm.sampling_params import SamplingParams
 from vllm.usage.usage_lib import UsageContext
 from vllm.utils import FlexibleArgumentParser
 
+from api.serve_utils import set_ulimit
+
 logger = init_logger("vllm.entrypoints.api_server")
 
 TIMEOUT_KEEP_ALIVE = 10  # seconds.
@@ -94,6 +96,7 @@ async def init_app(
     llm_engine: Optional[AsyncLLMEngine] = None,
 ) -> FastAPI:
     app = build_app(args)
+    set_ulimit()
 
     global engine
 

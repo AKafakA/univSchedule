@@ -20,6 +20,7 @@ ollama_instance = OllamaInstance(
     }
 )
 
+
 async def call():
     response = await ollama_instance.query_backend(
         request={"prompt": "Hello, how are you?"},

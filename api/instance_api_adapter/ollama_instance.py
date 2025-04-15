@@ -15,6 +15,10 @@ class OllamaInstance(Instance):
                  instance_type,
                  model_name: str,
                  model_maps):
+        # convert vllm model name format as llama-2-7b to ollama format llama2:7b
+        model_name_split = model_name.split("-")
+        model_name = model_name_split[0] + model_name_split[1] + ":" + model_name_split[2]
+
         super().__init__(instance_id, ip_address, port, predict_model_root_path,
                          start_time_ms, lookback_steps, instance_type, model_name, model_maps)
 

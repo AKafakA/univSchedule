@@ -17,9 +17,10 @@ def _load_data(dataframe):
 
 
 class RequestTraceDataset(Dataset):
-    def __init__(self, dataframe, lookback_steps=3):
+    def __init__(self, dataframe, lookback_steps=3, truncate_first_timestamp=False):
         self.lookback_steps = lookback_steps
         self.raw_data = _load_data(dataframe)
+        self._truncate_first_timestamp = truncate_first_timestamp
 
     def __len__(self):
         return len(self.raw_data)
@@ -30,6 +31,10 @@ class RequestTraceDataset(Dataset):
         first_unfinished_request = next((i for i, x in enumerate(self.raw_data)
                                          if x['timestamp'] + x['latency'] > timestamp), idx)
         first_index = max(first_unfinished_request - self.lookback_steps, 0)
+        if self._truncate_first_timestamp:
+            first_timestamp = self.raw_data[first_index]['timestamp']
+        else:
+            first_timestamp = self.raw_data[0]['timestamp']
         lookback_requests = []
         for i in range(first_index, idx):
             selected_row = self.raw_data[i]
@@ -37,14 +42,14 @@ class RequestTraceDataset(Dataset):
             if selected_row['timestamp'] + selected_row['latency'] < timestamp:
                 masked_latency = selected_row['latency']
             lookback_requests.append({
-                'timestamp': selected_row['timestamp'],
+                'timestamp': selected_row['timestamp'] - first_timestamp,
                 'latency': masked_latency,
                 'input_length': selected_row['input_length'],
                 'output_length': selected_row['output_length']
             })
         lookback_requests.append(
             {
-                'timestamp': current_request['timestamp'],
+                'timestamp': current_request['timestamp'] - first_timestamp,
                 'latency': -1,
                 'input_length': current_request['input_length'],
                 'output_length': current_request['output_length']

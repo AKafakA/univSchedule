@@ -1,0 +1,9 @@
+{
+  "optimal_target": "latency",
+  "secondary_target": "ttft",
+  "SLA": {
+    "latency": 100,
+    "relevance": 0.9,
+    "budget": 10000
+  }
+}

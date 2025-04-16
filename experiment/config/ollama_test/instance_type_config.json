@@ -1,0 +1,11 @@
+{
+  "instance_1": {
+    "model_name": "llama-2-7b",
+    "framework": "ollama",
+    "quantization": "bf16",
+    "node_type": "c240g5",
+    "input_price": 0.05,
+    "output_price": 0.25,
+    "max_count": 6
+  }
+}

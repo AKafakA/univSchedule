@@ -111,8 +111,7 @@ async def init_app(
 async def run_server(args: Namespace,
                      llm_engine: Optional[AsyncLLMEngine] = None,
                      **uvicorn_kwargs: Any) -> None:
-    logger.info("args: %s", args)
-
+    set_ulimit()
     app = await init_app(args, llm_engine)
     assert engine is not None
 

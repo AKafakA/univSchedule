@@ -69,8 +69,6 @@ async def run_server(args: Namespace,
 
     shutdown_task = await serve_http(
         app,
-        sock=None,
-        enable_ssl_refresh=args.enable_ssl_refresh,
         host=args.host,
         port=args.port,
         log_level=args.log_level,
@@ -104,15 +102,10 @@ if __name__ == "__main__":
         help="Whether client certificate is required (see stdlib ssl module's)"
     )
     parser.add_argument(
-        "--ssl-cert-reqs",
-        type=int,
-        default=int(ssl.CERT_NONE),
-        help="Whether client certificate is required (see stdlib ssl module's)"
-    )
-    parser.add_argument(
         "--root-path",
         type=str,
         default=None,
         help="FastAPI root_path when app is behind a path based routing proxy")
+    parser.add_argument("--log-level", type=str, default="debug")
     args = parser.parse_args()
     asyncio.run(run_server(args))

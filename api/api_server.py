@@ -118,7 +118,7 @@ async def init_app(
     start_time_in_ms = time.time() * 1000
     instance_dict = json.load(open(instance_config_path))
     scheduler_dict = json.load(open(scheduler_config_path))
-    model_dict = json.load(open(args.model_config_path))
+    instance_type_dict = json.load(open(args.instance_type_config_path))
     scheduler = Scheduler(scheduler_dict)
     execution_mode = ExecutionMode(args.phase)
 
@@ -126,10 +126,11 @@ async def init_app(
         instances.extend(instances_list)
     else:
         for key, value in instance_dict.items():
+            instance_type = value["instance_type"]
             instance = Instance(key, value["ip_address"], value["backend_port"],
                                 model_path, start_time_in_ms, args.lookback_steps, value["instance_type"],
                                 value["model_name"],
-                                model_dict)
+                                instance_type_dict[instance_type])
             instances.append(instance)
     assert len(instances) > 0
     return app
@@ -182,11 +183,11 @@ if __name__ == "__main__":
         default=None,
         help="FastAPI root_path when app is behind a path based routing proxy")
     parser.add_argument("--instance_config_path",
-                        type=str, default="config/instance_config.json")
+                        type=str, default="experiment/config/instance_config.json")
     parser.add_argument("--scheduler_config_path",
-                        type=str, default="config/scheduler_config.json")
-    parser.add_argument("--model_config_path",
-                        type=str, default="config/model_config.json")
+                        type=str, default="experiment/config/scheduler_config.json")
+    parser.add_argument("--instance_type_config_path",
+                        type=str, default="experiment/config/instance_type_config.json")
     parser.add_argument("--prediction_model_path", type=str,
                         default="",
                         help="prediction models only used for serving")

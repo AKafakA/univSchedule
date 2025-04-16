@@ -6,7 +6,7 @@ import asyncio
 ollama_instance = OllamaInstance(
     instance_id="ollama_instance",
     ip_address="localhost",
-    port=8200,
+    port=8000,
     predict_model_root_path="",
     start_time_ms=0,
     lookback_steps=0,

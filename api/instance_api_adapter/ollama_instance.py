@@ -14,13 +14,13 @@ class OllamaInstance(Instance):
                  lookback_steps,
                  instance_type,
                  model_name: str,
-                 model_maps):
+                 instance_type_info):
         # convert vllm model name format as llama-2-7b to ollama format llama2:7b
         model_name_split = model_name.split("-")
         model_name = model_name_split[0] + model_name_split[1] + ":" + model_name_split[2]
 
         super().__init__(instance_id, ip_address, port, predict_model_root_path,
-                         start_time_ms, lookback_steps, instance_type, model_name, model_maps)
+                         start_time_ms, lookback_steps, instance_type, model_name, instance_type_info)
 
     async def query_backend(self, request: Dict, max_tokens: int, client_timeout: ClientTimeout) -> Dict:
         """Query the backend instance with the request.

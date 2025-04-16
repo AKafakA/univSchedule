@@ -56,7 +56,7 @@ class Instance(ABC):
                  lookback_steps,
                  instance_type,
                  model_name: str,
-                 model_maps: Dict,
+                 instance_type_info: Dict,
                  ) -> None:
         self.instance_type = instance_type
         self.instance_id = instance_id
@@ -72,8 +72,8 @@ class Instance(ABC):
         self._start_time_ms = start_time_ms
         self._lookback_steps = lookback_steps
         self._model_name = model_name
-        self._input_price = model_maps[model_name]["input_price"]
-        self._output_price = model_maps[model_name]["output_price"]
+        self._input_price = instance_type_info["input_price"]
+        self._output_price = instance_type_info["output_price"]
 
     def prepare_input_for_predictor(self, predicted_request) -> Tensor:
         first_unfinished_request_index = next((i for i, x in enumerate(self._submitted_requests) if x['latency'] > 0),

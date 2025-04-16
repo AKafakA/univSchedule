@@ -72,10 +72,10 @@ async def async_request_gen(generator, qps: float, distribution="uniform", burst
 
 
 class GenerationBackend(str, Enum):
-    vLLM = "vLLM"
+    univSched = "univSched"
 
 
-async def query_model_vllm(prompt, verbose, ip_ports, with_request_id=True, max_request_len=0):
+async def query_model_univSched(prompt, verbose, ip_ports, with_request_id=True, max_request_len=0):
     prompt, prompt_len, request_id = prompt
 
     # Evenly dispatch request to the given api servers.
@@ -86,17 +86,9 @@ async def query_model_vllm(prompt, verbose, ip_ports, with_request_id=True, max_
     global num_finished_requests
 
     async with aiohttp.ClientSession(timeout=timeout) as session:
-        best_of = 1
         request_dict = {
             "prompt": prompt,
-            "n": 1,
-            "best_of": best_of,
-            "use_beam_search": False,
-            "temperature": 0.0,
-            "top_k": 1,
-            "max_tokens": max(max_request_len, 1),
-            "ignore_eos": True,
-            "stream": False,
+            "prompt_len": prompt_len,
         }
         if with_request_id:
             request_dict["request_id"] = request_id
@@ -144,8 +136,8 @@ async def run_with_sampling(
         shuffle: bool = True,
         record_context: bool = False,
 ):
-    if backend == GenerationBackend.vLLM:
-        query_model = query_model_vllm
+    if backend == GenerationBackend.univSched:
+        query_model = query_model_univSched
     else:
         raise ValueError(f'unknown backend {backend}')
 
@@ -269,7 +261,7 @@ def main():
                         action='store_true')
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('--backend', type=GenerationBackend,
-                        choices=[e.name for e in GenerationBackend], default='vLLM')
+                        choices=[e.name for e in GenerationBackend], default='univSched')
     parser.add_argument('--train_data_path', type=str, default='/experiment_output/train_data.json')
     parser.add_argument('--ip_ports', nargs='+', required=True, help='List of ip:port')
     parser.add_argument('--num_sampled_requests_per_runs', type=int, default=10)
